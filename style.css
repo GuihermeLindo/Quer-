@@ -1,3 +1,23 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .pergunta {
   position: absolute;
   top: 12%;
@@ -6,7 +26,7 @@
   font-size: clamp(2.5rem, 6vw, 5rem);
   font-weight: 900;
   color: #000;
-  background: transparent; /* tirado o fundo branco */
+  background: transparent; /* fundo transparente */
   padding: 0; /* sem padding */
   border-radius: 0;
   box-shadow: none; /* sem sombra */
@@ -15,4 +35,106 @@
   font-family: 'Poppins', sans-serif;
   letter-spacing: 2px;
   text-transform: uppercase;
+}
+
+.btn {
+  position: absolute;
+  padding: 15px 30px;
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: left 0.4s ease, top 0.4s ease;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+}
+
+.btn.sim {
+  background-color: #4caf50;
+  color: white;
+  top: 60%;
+  left: 40%;
+}
+
+.btn.nao {
+  background-color: #f44336;
+  color: white;
+  top: 60%;
+  left: 60%;
+}
+
+/* Animação suave de mexer o botão "Não" */
+@keyframes mexerSuave {
+  0%, 100% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+  25% {
+    transform: translate(-50%, -50%) translate(5px, -3px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(-4px, 4px);
+  }
+  75% {
+    transform: translate(-50%, -50%) translate(3px, 3px);
+  }
+}
+
+.btn.nao.animar {
+  animation: mexerSuave 3s ease-in-out infinite;
+}
+
+.mensagem {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 40%;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 700;
+  color: black;
+  display: none;
+  user-select: none;
+  z-index: 20;
+}
+
+.grande {
+  font-size: clamp(3rem, 8vw, 5rem);
+  color: #000;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.tag {
+  position: fixed;
+  bottom: 10px;
+  right: 15px;
+  font-weight: 900;
+  font-size: 18px;
+  color: #000;
+  user-select: none;
+  z-index: 30;
+}
+
+@media (max-width: 600px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .pergunta {
+    font-size: clamp(1.8rem, 8vw, 3rem);
+    top: 10%;
+  }
+
+  .mensagem {
+    font-size: clamp(1.2rem, 5vw, 2rem);
+  }
+
+  .grande {
+    font-size: clamp(2rem, 7vw, 3rem);
+  }
+
+  .tag {
+    font-size: 14px;
+  }
 }

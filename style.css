@@ -18,6 +18,17 @@ body {
   height: 100%;
 }
 
+.titulo {
+  position: absolute;
+  top: 10%;
+  width: 100%;
+  text-align: center;
+  font-size: 48px;
+  font-weight: bold;
+  color: #d62828;
+  z-index: 1;
+}
+
 .btn {
   position: absolute;
   padding: 15px 30px;
@@ -27,12 +38,13 @@ body {
   border-radius: 10px;
   cursor: pointer;
   transition: transform 0.3s ease;
+  z-index: 2;
 }
 
 .btn.sim {
   background-color: #4CAF50;
   color: white;
-  top: 50%;
+  top: 60%;
   left: 40%;
   transform: translate(-50%, -50%);
 }
@@ -40,7 +52,7 @@ body {
 .btn.nao {
   background-color: #f44336;
   color: white;
-  top: 50%;
+  top: 60%;
   left: 60%;
   transform: translate(-50%, -50%);
 }
@@ -49,14 +61,26 @@ body {
   position: absolute;
   width: 100%;
   text-align: center;
-  top: 20%;
+  top: 35%;
   font-size: 32px;
   font-weight: bold;
   color: black;
   display: none;
+  z-index: 3;
 }
 
 .grande {
   font-size: 64px;
   color: #000;
+}
+
+.tag {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+  display: none;
+  z-index: 3;
 }

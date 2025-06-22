@@ -25,6 +25,8 @@
     let contadorNao = 0;
     let desistiu = false;
 
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
     function desativarBotoes() {
       botaoSim.disabled = true;
       botaoNao.disabled = true;
@@ -38,11 +40,10 @@
       mensagem.textContent = "MUITO OBRIGADO ❤️ 😍";
       mensagem.style.display = "block";
       mensagem.classList.add("grande");
-      tag.style.display = "block";
       desativarBotoes();
     });
 
-    botaoNao.addEventListener("click", () => {
+    function reacaoBotaoNao() {
       if (botaoNao.disabled) return;
 
       contadorNao++;
@@ -73,7 +74,7 @@
       } else {
         moverBotao();
       }
-    });
+    }
 
     function moverBotao() {
       const largura = window.innerWidth - 100;
@@ -92,6 +93,13 @@
       setTimeout(() => {
         mensagem.style.display = "none";
       }, 2000);
+    }
+
+    // Interação baseada no dispositivo
+    if (isTouch) {
+      botaoNao.addEventListener("click", reacaoBotaoNao);
+    } else {
+      botaoNao.addEventListener("mouseover", reacaoBotaoNao);
     }
   </script>
 </body>

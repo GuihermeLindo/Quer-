@@ -5,8 +5,8 @@
 }
 
 body {
-  background-color: #ffe4e1;
-  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   height: 100vh;
   overflow: hidden;
   position: relative;
@@ -18,15 +18,15 @@ body {
   height: 100%;
 }
 
-.titulo {
+.pergunta {
   position: absolute;
-  top: 10%;
+  top: 25%;
   width: 100%;
   text-align: center;
-  font-size: 48px;
+  font-size: 6vw;
   font-weight: bold;
-  color: #d62828;
-  z-index: 1;
+  color: #000000;
+  z-index: 2;
 }
 
 .btn {
@@ -61,7 +61,7 @@ body {
   position: absolute;
   width: 100%;
   text-align: center;
-  top: 35%;
+  top: 40%;
   font-size: 32px;
   font-weight: bold;
   color: black;
@@ -83,4 +83,25 @@ body {
   color: #000;
   display: none;
   z-index: 3;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .pergunta {
+    font-size: 8vw;
+    top: 20%;
+  }
+
+  .mensagem {
+    font-size: 24px;
+  }
+
+  .grande {
+    font-size: 40px;
+  }
 }

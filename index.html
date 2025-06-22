@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Quer namorar comigo?</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -12,7 +12,8 @@
 
     <div id="mensagem" class="mensagem"></div>
     <button id="sim" class="btn sim">Sim</button>
-    <button id="nao" class="btn nao">Não</button>
+    <button id="nao" class="btn nao animar">Não</button>
+
     <div id="tag" class="tag">@vs.guiz</div>
   </div>
 
@@ -25,37 +26,32 @@
     let desistiu = false;
     let bloqueado = false;
     let podeContar = true;
-    let mostrandoPorQueNao = false;
 
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
+    // Função para bloquear os botões e parar animação do "Não"
     function bloquearBotoes() {
+      bloqueado = true;
       botaoSim.disabled = true;
       botaoNao.disabled = true;
-      botaoSim.style.opacity = 0.5;
-      botaoNao.style.opacity = 0.5;
-      botaoSim.style.cursor = "not-allowed";
-      botaoNao.style.cursor = "not-allowed";
-      bloqueado = true;
+      botaoSim.style.opacity = '0.5';
+      botaoNao.style.opacity = '0.5';
+      botaoSim.style.cursor = 'not-allowed';
+      botaoNao.style.cursor = 'not-allowed';
+      botaoNao.classList.remove('animar');
     }
 
-    botaoSim.addEventListener("click", () => {
-      if (bloqueado) return;
-      mensagem.textContent = "MUITO OBRIGADO ❤️ 😍";
-      mensagem.style.display = "block";
-      mensagem.classList.add("grande");
-      bloquearBotoes();
-    });
-
+    // Mostrar mensagem temporária (2s)
     function mostrarMensagemTemporaria(texto) {
       mensagem.textContent = texto;
-      mensagem.style.display = "block";
-      mensagem.classList.remove("grande");
+      mensagem.style.display = 'block';
+      mensagem.classList.remove('grande');
       setTimeout(() => {
-        mensagem.style.display = "none";
+        mensagem.style.display = 'none';
       }, 2000);
     }
 
+    // Move o botão "Não" para uma posição aleatória na tela (com transição suave)
     function moverBotaoRandom() {
       const largura = window.innerWidth - botaoNao.offsetWidth;
       const altura = window.innerHeight - botaoNao.offsetHeight;
@@ -63,44 +59,62 @@
       const novoTopo = Math.floor(Math.random() * altura);
       botaoNao.style.left = `${novaEsquerda}px`;
       botaoNao.style.top = `${novoTopo}px`;
-      botaoNao.style.transform = "translate(0, 0)";
+      botaoNao.style.transform = 'translate(0, 0)';
     }
 
+    // Função chamada ao interagir com o botão "Não"
     function reacaoBotaoNao() {
-      if (!podeContar || bloqueado) return;
+      if (bloqueado || !podeContar) return;
+
       podeContar = false;
-      setTimeout(() => podeContar = true, 200);
+      setTimeout(() => {
+        podeContar = true;
+      }, 600); // Tempo para evitar múltiplos eventos rápido
 
       contadorNao++;
 
       if (desistiu) {
-        mensagem.textContent = "Eu te odeio 😡";
-        mensagem.style.display = "block";
-        mensagem.classList.add("grande");
+        mensagem.textContent = 'Eu te odeio 😡';
+        mensagem.style.display = 'block';
+        mensagem.classList.add('grande');
         bloquearBotoes();
         return;
       }
 
       if (contadorNao === 3) {
-        mostrarMensagemTemporaria("Tem certeza?");
+        mostrarMensagemTemporaria('Tem certeza?');
       } else if (contadorNao === 5) {
-        mostrandoPorQueNao = true;
-        mostrarMensagemTemporaria("Por que não?");
+        mostrarMensagemTemporaria('Por que não?');
       } else if (contadorNao === 10) {
-        mensagem.textContent = "Desisto...";
-        mensagem.style.display = "block";
-        mensagem.classList.remove("grande");
+        mensagem.textContent = 'Desisto...';
+        mensagem.style.display = 'block';
+        mensagem.classList.remove('grande');
         desistiu = true;
+        // Posiciona botão "Não" fixo no centro direito
+        botaoNao.style.top = '60%';
+        botaoNao.style.left = '60%';
+        botaoNao.style.transform = 'translate(-50%, -50%)';
       } else {
         moverBotaoRandom();
       }
     }
 
+    // Clique no botão "Sim"
+    botaoSim.addEventListener('click', () => {
+      if (bloqueado) return;
+      mensagem.textContent = 'MUITO OBRIGADO ❤️ 😍';
+      mensagem.style.display = 'block';
+      mensagem.classList.add('grande');
+      bloquearBotoes();
+    });
+
     if (isTouch) {
-      botaoNao.addEventListener("click", reacaoBotaoNao);
+      // Mobile: clique no botão "Não"
+      botaoNao.addEventListener('click', reacaoBotaoNao);
     } else {
-      // Desktop: só reage quando o mouse entra no botão (hover real)
-      botaoNao.addEventListener("mouseenter", () => {
+      // Desktop: pular só quando mouse realmente entrar em cima
+      botaoNao.addEventListener('mouseenter', () => {
+        if (bloqueado) return;
         reacaoBotaoNao();
       });
     }

@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #ffffff;
+  background-color: #fff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   height: 100vh;
   overflow: hidden;
@@ -20,33 +20,42 @@ body {
 
 .pergunta {
   position: absolute;
-  top: 25%;
+  top: 12%;
   width: 100%;
   text-align: center;
-  font-size: 6vw;
-  font-weight: bold;
-  color: #000000;
-  z-index: 2;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  color: #000;
+  background: #fff;
+  padding: 15px 0;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  user-select: none;
+  z-index: 10;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .btn {
   position: absolute;
   padding: 15px 30px;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 700;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 2;
+  user-select: none;
+  transition: left 0.4s ease, top 0.4s ease;
+  z-index: 5;
+  transform: translate(-50%, -50%);
 }
 
 .btn.sim {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   top: 60%;
   left: 40%;
-  transform: translate(-50%, -50%);
 }
 
 .btn.nao {
@@ -54,7 +63,26 @@ body {
   color: white;
   top: 60%;
   left: 60%;
-  transform: translate(-50%, -50%);
+}
+
+/* Animação suave de mexer o botão "Não" */
+@keyframes mexerSuave {
+  0%, 100% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+  25% {
+    transform: translate(-50%, -50%) translate(5px, -3px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(-4px, 4px);
+  }
+  75% {
+    transform: translate(-50%, -50%) translate(3px, 3px);
+  }
+}
+
+.btn.nao.animar {
+  animation: mexerSuave 3s ease-in-out infinite;
 }
 
 .mensagem {
@@ -62,26 +90,29 @@ body {
   width: 100%;
   text-align: center;
   top: 40%;
-  font-size: 32px;
-  font-weight: bold;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 700;
   color: black;
   display: none;
-  z-index: 3;
+  user-select: none;
+  z-index: 20;
 }
 
 .grande {
-  font-size: 64px;
+  font-size: clamp(3rem, 8vw, 5rem);
   color: #000;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 .tag {
   position: fixed;
   bottom: 10px;
   right: 15px;
+  font-weight: 900;
   font-size: 18px;
-  font-weight: bold;
   color: #000;
-  z-index: 3;
+  user-select: none;
+  z-index: 30;
 }
 
 @media (max-width: 600px) {
@@ -91,16 +122,16 @@ body {
   }
 
   .pergunta {
-    font-size: 8vw;
-    top: 20%;
+    font-size: clamp(1.8rem, 8vw, 3rem);
+    top: 10%;
   }
 
   .mensagem {
-    font-size: 24px;
+    font-size: clamp(1.2rem, 5vw, 2rem);
   }
 
   .grande {
-    font-size: 40px;
+    font-size: clamp(2rem, 7vw, 3rem);
   }
 
   .tag {

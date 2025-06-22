@@ -50,7 +50,7 @@
     function reacaoBotaoNao() {
       if (!podeContar || bloqueado) return;
       podeContar = false;
-      setTimeout(() => podeContar = true, 1000); // 1 segundo de espera
+      setTimeout(() => podeContar = true, 200); // 0,2 segundos de delay
 
       contadorNao++;
 

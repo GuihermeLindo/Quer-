@@ -56,16 +56,6 @@
       }, 2000);
     }
 
-    function moverBotaoRandom() {
-      const largura = window.innerWidth - botaoNao.offsetWidth;
-      const altura = window.innerHeight - botaoNao.offsetHeight;
-      const novaEsquerda = Math.floor(Math.random() * largura);
-      const novoTopo = Math.floor(Math.random() * altura);
-      botaoNao.style.left = `${novaEsquerda}px`;
-      botaoNao.style.top = `${novoTopo}px`;
-      botaoNao.style.transform = "translate(0, 0)";
-    }
-
     function moverBotaoParaForaDoMouse(mouseX, mouseY) {
       const largura = window.innerWidth - botaoNao.offsetWidth;
       const altura = window.innerHeight - botaoNao.offsetHeight;
@@ -102,6 +92,16 @@
       }
     }
 
+    function moverBotaoRandom() {
+      const largura = window.innerWidth - botaoNao.offsetWidth;
+      const altura = window.innerHeight - botaoNao.offsetHeight;
+      const novaEsquerda = Math.floor(Math.random() * largura);
+      const novoTopo = Math.floor(Math.random() * altura);
+      botaoNao.style.left = `${novaEsquerda}px`;
+      botaoNao.style.top = `${novoTopo}px`;
+      botaoNao.style.transform = "translate(0, 0)";
+    }
+
     function reacaoBotaoNao() {
       if (!podeContar || bloqueado) return;
       podeContar = false;
@@ -109,7 +109,8 @@
 
       contadorNao++;
 
-      if (desistiu && contadorNao > 10) {
+      if (desistiu) {
+        // Só aparece o "Eu te odeio" ao clicar no botão Não
         mensagem.textContent = "Eu te odeio 😡";
         mensagem.style.display = "block";
         mensagem.classList.add("grande");
@@ -122,7 +123,7 @@
       } else if (contadorNao === 5) {
         mostrandoPorQueNao = true;
         mostrarMensagemTemporaria("Por que não?");
-        // Continua fugindo mas sem mensagens repetidas
+        // Continua fugindo sem mensagens repetidas
       } else if (contadorNao === 10) {
         mensagem.textContent = "Desisto...";
         mensagem.style.display = "block";
@@ -145,13 +146,16 @@
       window.addEventListener("mousemove", (e) => {
         if (bloqueado) return;
 
-        // Se estamos na fase "Por que não?", só mover o botão sempre que o mouse se aproximar
+        // Se desistiu, não responde ao mousemove para contar cliques, só permite click pra "Eu te odeio"
+        if (desistiu) return;
+
+        // Se estiver mostrando "Por que não?", sempre foge do mouse, sem contar cliques
         if (mostrandoPorQueNao) {
           moverBotaoParaForaDoMouse(e.clientX, e.clientY);
           return;
         }
 
-        // Se estiver perto do botão, mover e contar o evento
+        // Fora dessas condições, se mouse estiver perto, movimenta e conta
         const botaoRect = botaoNao.getBoundingClientRect();
         const botaoCenterX = botaoRect.left + botaoNao.offsetWidth / 2;
         const botaoCenterY = botaoRect.top + botaoNao.offsetHeight / 2;
@@ -161,6 +165,16 @@
 
         if (distancia < 150) {
           reacaoBotaoNao();
+        }
+      });
+
+      // Só permitir click no botão Não para mostrar "Eu te odeio" após desistir
+      botaoNao.addEventListener("click", () => {
+        if (desistiu && !bloqueado) {
+          mensagem.textContent = "Eu te odeio 😡";
+          mensagem.style.display = "block";
+          mensagem.classList.add("grande");
+          bloquearBotoes();
         }
       });
     }

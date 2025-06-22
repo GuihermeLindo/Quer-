@@ -26,15 +26,16 @@ body {
   font-size: clamp(2.5rem, 6vw, 5rem);
   font-weight: 900;
   color: #000;
-  background: transparent; /* fundo transparente */
-  padding: 0; /* sem padding */
+  background: transparent;
+  padding: 0;
   border-radius: 0;
-  box-shadow: none; /* sem sombra */
+  box-shadow: none;
   user-select: none;
   z-index: 10;
   font-family: 'Poppins', sans-serif;
   letter-spacing: 2px;
   text-transform: uppercase;
+  pointer-events: none; /* deixar texto “passar o clique” */
 }
 
 .btn {
@@ -47,7 +48,7 @@ body {
   cursor: pointer;
   user-select: none;
   transition: left 0.4s ease, top 0.4s ease;
-  z-index: 5;
+  z-index: 30;
   transform: translate(-50%, -50%);
 }
 
@@ -65,7 +66,6 @@ body {
   left: 60%;
 }
 
-/* Animação suave de mexer o botão "Não" */
 @keyframes mexerSuave {
   0%, 100% {
     transform: translate(-50%, -50%) translate(0, 0);
@@ -96,6 +96,7 @@ body {
   display: none;
   user-select: none;
   z-index: 20;
+  pointer-events: none; /* deixar clique passar */
 }
 
 .grande {

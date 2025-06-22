@@ -59,8 +59,8 @@
       botaoNao.style.transform = 'translate(0, 0)';
     }
 
-    function reacaoBotaoNao() {
-      if (bloqueado || !podeContar) return;
+    function reacaoBotaoNaoMouseEnter() {
+      if (bloqueado || !podeContar || desistiu) return;
 
       podeContar = false;
       setTimeout(() => {
@@ -68,14 +68,6 @@
       }, 600);
 
       contadorNao++;
-
-      if (desistiu) {
-        mensagem.textContent = 'Eu te odeio 😡';
-        mensagem.style.display = 'block';
-        mensagem.classList.add('grande');
-        bloquearBotoes();
-        return;
-      }
 
       if (contadorNao === 3) {
         mostrarMensagemTemporaria('Tem certeza?');
@@ -89,8 +81,26 @@
         botaoNao.style.top = '60%';
         botaoNao.style.left = '60%';
         botaoNao.style.transform = 'translate(-50%, -50%)';
+        botaoNao.classList.remove('animar');
       } else {
         moverBotaoRandom();
+      }
+    }
+
+    function reacaoBotaoNaoClick() {
+      if (bloqueado) return;
+
+      if (desistiu) {
+        mensagem.textContent = 'Eu te odeio 😡';
+        mensagem.style.display = 'block';
+        mensagem.classList.add('grande');
+        bloquearBotoes();
+        return;
+      }
+
+      // Se não desistiu, a reação do click é igual à do mouseenter (em mobile)
+      if (!desistiu) {
+        reacaoBotaoNaoMouseEnter();
       }
     }
 
@@ -103,12 +113,10 @@
     });
 
     if (isTouch) {
-      botaoNao.addEventListener('click', reacaoBotaoNao);
+      botaoNao.addEventListener('click', reacaoBotaoNaoClick);
     } else {
-      botaoNao.addEventListener('mouseenter', () => {
-        if (bloqueado) return;
-        reacaoBotaoNao();
-      });
+      botaoNao.addEventListener('mouseenter', reacaoBotaoNaoMouseEnter);
+      botaoNao.addEventListener('click', reacaoBotaoNaoClick);
     }
   </script>
 </body>

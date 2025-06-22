@@ -20,12 +20,12 @@
     const botaoSim = document.getElementById("sim");
     const botaoNao = document.getElementById("nao");
     const mensagem = document.getElementById("mensagem");
-    const tag = document.getElementById("tag");
 
     let contadorNao = 0;
     let desistiu = false;
     let bloqueado = false;
     let podeContar = true;
+    let mostrandoPorQueNao = false;
 
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
@@ -47,10 +47,65 @@
       bloquearBotoes();
     });
 
+    function mostrarMensagemTemporaria(texto) {
+      mensagem.textContent = texto;
+      mensagem.style.display = "block";
+      mensagem.classList.remove("grande");
+      setTimeout(() => {
+        mensagem.style.display = "none";
+      }, 2000);
+    }
+
+    function moverBotaoRandom() {
+      const largura = window.innerWidth - botaoNao.offsetWidth;
+      const altura = window.innerHeight - botaoNao.offsetHeight;
+      const novaEsquerda = Math.floor(Math.random() * largura);
+      const novoTopo = Math.floor(Math.random() * altura);
+      botaoNao.style.left = `${novaEsquerda}px`;
+      botaoNao.style.top = `${novoTopo}px`;
+      botaoNao.style.transform = "translate(0, 0)";
+    }
+
+    function moverBotaoParaForaDoMouse(mouseX, mouseY) {
+      const largura = window.innerWidth - botaoNao.offsetWidth;
+      const altura = window.innerHeight - botaoNao.offsetHeight;
+
+      const botaoRect = botaoNao.getBoundingClientRect();
+
+      // Distância entre mouse e centro do botão
+      const botaoCenterX = botaoRect.left + botaoNao.offsetWidth / 2;
+      const botaoCenterY = botaoRect.top + botaoNao.offsetHeight / 2;
+      const distanciaX = mouseX - botaoCenterX;
+      const distanciaY = mouseY - botaoCenterY;
+      const distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
+
+      // Se o mouse estiver muito perto (menos de 150px), move o botão para o lado oposto
+      if (distancia < 150) {
+        // Vetor invertido normalizado para afastar o botão
+        let vetorX = botaoCenterX - mouseX;
+        let vetorY = botaoCenterY - mouseY;
+        const magnitude = Math.sqrt(vetorX * vetorX + vetorY * vetorY) || 1;
+        vetorX /= magnitude;
+        vetorY /= magnitude;
+
+        // Nova posição a 200px do mouse na direção oposta
+        let novaEsquerda = mouseX + vetorX * 200 - botaoNao.offsetWidth / 2;
+        let novoTopo = mouseY + vetorY * 200 - botaoNao.offsetHeight / 2;
+
+        // Limitar dentro da janela
+        novaEsquerda = Math.min(Math.max(0, novaEsquerda), largura);
+        novoTopo = Math.min(Math.max(0, novoTopo), altura);
+
+        botaoNao.style.left = `${novaEsquerda}px`;
+        botaoNao.style.top = `${novoTopo}px`;
+        botaoNao.style.transform = "translate(0, 0)";
+      }
+    }
+
     function reacaoBotaoNao() {
       if (!podeContar || bloqueado) return;
       podeContar = false;
-      setTimeout(() => podeContar = true, 200); // 0,2 segundos de delay
+      setTimeout(() => podeContar = true, 200); // 200ms delay
 
       contadorNao++;
 
@@ -65,7 +120,9 @@
       if (contadorNao === 3) {
         mostrarMensagemTemporaria("Tem certeza?");
       } else if (contadorNao === 5) {
+        mostrandoPorQueNao = true;
         mostrarMensagemTemporaria("Por que não?");
+        // Continua fugindo mas sem mensagens repetidas
       } else if (contadorNao === 10) {
         mensagem.textContent = "Desisto...";
         mensagem.style.display = "block";
@@ -78,34 +135,34 @@
           desistiu = true;
         }, 1500);
       } else {
-        moverBotao();
+        moverBotaoRandom();
       }
     }
 
-    function moverBotao() {
-      const largura = window.innerWidth - 100;
-      const altura = window.innerHeight - 50;
-      const novaEsquerda = Math.floor(Math.random() * largura);
-      const novoTopo = Math.floor(Math.random() * altura);
-      botaoNao.style.left = `${novaEsquerda}px`;
-      botaoNao.style.top = `${novoTopo}px`;
-      botaoNao.style.transform = "translate(0, 0)";
-    }
-
-    function mostrarMensagemTemporaria(texto) {
-      mensagem.textContent = texto;
-      mensagem.style.display = "block";
-      mensagem.classList.remove("grande");
-      setTimeout(() => {
-        mensagem.style.display = "none";
-      }, 2000);
-    }
-
-    // Interação por tipo de dispositivo
     if (isTouch) {
       botaoNao.addEventListener("click", reacaoBotaoNao);
     } else {
-      botaoNao.addEventListener("mouseover", reacaoBotaoNao);
+      window.addEventListener("mousemove", (e) => {
+        if (bloqueado) return;
+
+        // Se estamos na fase "Por que não?", só mover o botão sempre que o mouse se aproximar
+        if (mostrandoPorQueNao) {
+          moverBotaoParaForaDoMouse(e.clientX, e.clientY);
+          return;
+        }
+
+        // Se estiver perto do botão, mover e contar o evento
+        const botaoRect = botaoNao.getBoundingClientRect();
+        const botaoCenterX = botaoRect.left + botaoNao.offsetWidth / 2;
+        const botaoCenterY = botaoRect.top + botaoNao.offsetHeight / 2;
+        const distanciaX = e.clientX - botaoCenterX;
+        const distanciaY = e.clientY - botaoCenterY;
+        const distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
+
+        if (distancia < 150) {
+          reacaoBotaoNao();
+        }
+      });
     }
   </script>
 </body>

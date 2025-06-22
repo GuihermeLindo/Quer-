@@ -102,4 +102,8 @@ body {
   .grande {
     font-size: 40px;
   }
+
+  .tag {
+    font-size: 14px;
+  }
 }

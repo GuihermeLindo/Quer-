@@ -24,34 +24,41 @@
 
     let contadorNao = 0;
     let desistiu = false;
+    let bloqueado = false;
+    let podeContar = true;
 
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    function desativarBotoes() {
+    function bloquearBotoes() {
       botaoSim.disabled = true;
       botaoNao.disabled = true;
       botaoSim.style.opacity = 0.5;
       botaoNao.style.opacity = 0.5;
       botaoSim.style.cursor = "not-allowed";
       botaoNao.style.cursor = "not-allowed";
+      bloqueado = true;
     }
 
     botaoSim.addEventListener("click", () => {
+      if (bloqueado) return;
       mensagem.textContent = "MUITO OBRIGADO ❤️ 😍";
       mensagem.style.display = "block";
       mensagem.classList.add("grande");
-      desativarBotoes();
+      bloquearBotoes();
     });
 
     function reacaoBotaoNao() {
-      if (botaoNao.disabled) return;
+      if (!podeContar || bloqueado) return;
+      podeContar = false;
+      setTimeout(() => podeContar = true, 1000); // 1 segundo de espera
 
       contadorNao++;
 
-      if (desistiu) {
-        mensagem.textContent = "TE ODEIO 😡";
+      if (desistiu && contadorNao > 10) {
+        mensagem.textContent = "Eu te odeio 😡";
         mensagem.style.display = "block";
         mensagem.classList.add("grande");
+        bloquearBotoes();
         return;
       }
 
@@ -69,7 +76,6 @@
           botaoNao.style.left = "60%";
           botaoNao.style.transform = "translate(-50%, -50%)";
           desistiu = true;
-          desativarBotoes();
         }, 1500);
       } else {
         moverBotao();
@@ -95,7 +101,7 @@
       }, 2000);
     }
 
-    // Interação baseada no dispositivo
+    // Interação por tipo de dispositivo
     if (isTouch) {
       botaoNao.addEventListener("click", reacaoBotaoNao);
     } else {
